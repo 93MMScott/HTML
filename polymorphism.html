@@ -1,0 +1,24 @@
+<html>
+<script>
+function potato()
+{
+    var arrayOfArguments = Array.from(arguments).join("+");
+    console.log("Result: " + eval(arrayOfArguments));
+}
+
+function olives(a, b)
+{
+    console.log("I UNDERSTANG");
+}
+
+function Maths(A,B, functional)
+{
+    //functional = olives
+    var f = functional;
+    // functional = f
+    f(A,B,A,B,A,B,A,B);
+}
+
+</script>
+<body onload="Maths(5,6, potato)"></body>
+</html>

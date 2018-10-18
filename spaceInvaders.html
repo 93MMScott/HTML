@@ -1,0 +1,301 @@
+<html>
+<script>
+// INIT TIMER
+var Timer1;
+
+var firstInput = true;
+
+// INIT MUSIC
+var audio = document.createElement('audio');
+
+var enemyHP = 11;
+var enemyMovement = "right"; 
+var decisionCount = 0;
+var enemyTop = 0;
+var enemyLeft = 0;
+
+var keys = {};
+
+window.onkeyup = function(e) { keys[e.keyCode] = false; }
+window.onkeydown = function(e) { keys[e.keyCode] = true; }
+
+var chamberCount = 1;
+
+var top = 500;
+var left = 0;
+
+var bulletLeft = 30;
+
+var bullet1Top = 780;
+var bullet2Top = 780;
+var bullet3Top = 780;
+var bullet4Top = 780;
+var bullet5Top = 780;
+
+function loadgame()
+{
+    audio.src = 'BattleMusic.wav';
+    audio.play();
+    Timer = window.setInterval(tick, 100);
+}
+
+function checkKey()
+{
+    if(firstInput)
+    {
+        firstInput = false;
+        loadgame();
+    }
+
+    var gunner = document.getElementById("gunner");
+    var bullet1 = document.getElementById("bullet1");
+    var bullet2 = document.getElementById("bullet2");
+    var bullet3 = document.getElementById("bullet3");
+    var bullet4 = document.getElementById("bullet4");
+    var bullet5 = document.getElementById("bullet5");
+
+        // go left
+        left = parseInt(gunner.style.left);
+        if(event.keyCode == 37)
+        {
+            if(left > 0)
+            {
+                left -= 45;
+                bulletLeft -= 45;
+                gunner.style.left = left+"px";
+                if(bullet1.style.visibility == "hidden") { bullet1.style.left = bulletLeft + "px"; }
+                if(bullet2.style.visibility == "hidden") { bullet2.style.left = bulletLeft + "px"; }
+                if(bullet3.style.visibility == "hidden") { bullet3.style.left = bulletLeft + "px"; }
+                if(bullet4.style.visibility == "hidden") { bullet4.style.left = bulletLeft + "px"; }
+                if(bullet5.style.visibility == "hidden") { bullet5.style.left = bulletLeft + "px"; }
+            }
+        }
+        // go right
+        else if(event.keyCode == 39)
+        {
+            if(left <= 1800)
+            {
+                left += 45;
+                bulletLeft += 45;
+                gunner.style.left = left+"px";
+                if(bullet1.style.visibility == "hidden") { bullet1.style.left = bulletLeft + "px"; }
+                if(bullet2.style.visibility == "hidden") { bullet2.style.left = bulletLeft + "px"; }
+                if(bullet3.style.visibility == "hidden") { bullet3.style.left = bulletLeft + "px"; }
+                if(bullet4.style.visibility == "hidden") { bullet4.style.left = bulletLeft + "px"; }
+                if(bullet5.style.visibility == "hidden") { bullet5.style.left = bulletLeft + "px"; }
+            }
+        }
+        // shoot
+        else if(event.keyCode == 32)
+        {
+            switch(chamberCount)
+            {
+               case 1:
+                if(bullet1.style.visibility == "hidden")
+                {
+                    fireBullet(bullet1);
+                }
+                break;
+               case 2:
+                if(bullet2.style.visibility == "hidden")
+                {
+                    fireBullet(bullet2);
+                }
+                break;
+               case 3:
+                if(bullet3.style.visibility == "hidden")
+                {
+                    fireBullet(bullet3);
+                }
+                break;
+               case 4:
+                if(bullet4.style.visibility == "hidden")
+                {
+                    fireBullet(bullet4);
+                }
+                break;
+               case 5:
+                if(bullet5.style.visibility == "hidden")
+                {
+                    fireBullet(bullet5);
+                }
+                break;
+            }
+        }
+}
+
+
+function fireBullet(bullet)
+{
+    chamberCount++;
+    if(chamberCount > 5)
+    {
+        chamberCount = 1;
+    }
+    bullet.style.visibility = "visible";
+}
+
+function tick()
+{
+    if(decisionCount == 10)
+    {
+        decisionCount = 0;
+        decision = Math.floor((Math.random() * 4) + 1);
+
+        switch(decision){
+            case 1: enemyMovement = "left"; break;
+            case 2: enemyMovement = "right"; break;
+            case 3: enemyMovement = "left"; break;
+            case 4: enemyMovement = "right"; break;
+        }
+    }
+    decisionCount++;
+    //move visible bullets
+    var bullets = document.getElementsByClassName("bullet");
+    var enemy = document.getElementById("enemy");
+
+    for(var i = 0; i < bullets.length; i++)
+    {
+        //get the bullet
+        var currentBullet = bullets[i];
+        // update the position and check the collision 
+        if(currentBullet.style.visibility == "visible")
+        {
+            var bulletTop = (currentBullet.style.top).substring(0,currentBullet.style.top.length-2);
+            var bulletLeft = (currentBullet.style.left).substring(0,currentBullet.style.left.length-2);
+            if(bulletTop <= 0)
+            {
+                currentBullet.style.visibility = "hidden";
+                currentBullet.style.top = "780px";
+                currentBullet.style.left = bulletLeft + "px";
+            }
+            else
+            {
+                currentBullet.top = (currentBullet.style.top).substring(0,currentBullet.style.top.length-2);
+                currentBullet.top -= 80;
+                currentBullet.style.top = currentBullet.top;
+            }
+
+            //collision detection
+            if((bulletLeft >= enemyLeft-130 && bulletLeft <= enemyLeft+130) && (bulletTop >= enemyTop-45 && bulletTop <= enemyTop+45))
+            {
+                damage(enemy);
+                currentBullet.style.visibility = "hidden";
+                currentBullet.style.top = "780px";
+                currentBullet.style.left = bulletLeft + "px";
+            }
+        }
+    }
+
+    // move enemy ship and update the collision box
+    if(enemy.style.visibility == "visible")
+    {
+        if(enemyMovement == "right")
+        {
+            enemyLeft = parseInt((enemy.style.left).substring(0,enemy.style.left.length-2));
+            if(enemyLeft <= 1680)
+            {
+                enemyLeft += 60;
+                enemy.style.left = enemyLeft + "px";
+            }
+            else
+            {
+                enemyMovement = "left";
+                enemyTop += 100;
+                enemy.style.top = enemyTop + "px";
+                if(enemyTop > 700)
+                {
+                    lost();
+                }
+            }
+        }
+        else if(enemyMovement == "left")
+        {
+            enemyLeft = parseInt((enemy.style.left).substring(0,enemy.style.left.length-2));
+            if(enemyLeft >= 20)
+            {
+                enemyLeft -= 60;
+                enemy.style.left = enemyLeft + "px";
+            }
+            else
+            {
+                enemyMovement = "right";
+                enemyTop += 100;
+                enemy.style.top = enemyTop + "px";
+                if(enemyTop > 700)
+                {
+                    lost();
+                }
+            }
+        }
+    }
+}
+
+function damage(object)
+{
+    if(object.className == "enemy")
+    {
+        var healthBar = document.getElementsByClassName("health");
+        healthBar[enemyHP].innerHTML = "<img src=https://i.imgur.com/t1VU86k.png>";
+        enemyHP--;
+        
+        if(enemyHP < 0)
+        {
+            explode(object);
+        }
+    }
+}
+
+function explode(object)
+{
+    object.innerHTML = "<img src=https://media.giphy.com/media/clRNxtaLE0gh2/giphy.gif>";
+    window.setTimeout(win, 500);
+}
+
+function win(object)
+{
+    document.getElementById("enemy").style.visibility = "hidden";
+    window.setTimeout(winMsg, 500);
+}
+function winMsg()
+{
+    audio.pause();
+    window.alert("Congratulations, you killed the boss and won! Refresh to play again.");
+}
+
+function lost()
+{
+    window.clearInterval(Timer);
+    window.alert("You lost! Refresh to try again.");
+    audio.pause();
+}
+</script>
+
+<body style="border:10px outset black; margin:auto;background-color:black;" onkeydown="checkKey()">
+</body>
+
+<!- enemy ship>
+<span class = "enemy" id = "enemy" style="position:absolute; left:0px; top:0px; visibility: visible">
+    <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+        <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+            <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                    <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                        <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                            <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                                <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                                    <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                                        <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                                            <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span>
+                                                <span class = "health"><img src = "https://i.imgur.com/pOIQobY.png"></span><br>
+                                                    <img src = "https://i.imgur.com/dI0LatY.png"></img></span>
+
+<!- hero ship>
+<span id = "gunner" style="position:absolute; color:white; font-size: 30px; left:0px; top:810px;"><img src = "https://i.imgur.com/TJS6UDX.png"></span>
+<span class = "bullet" id = "bullet1" style="position:absolute; color: white; font-size: 30px; left:30px; top: 780px; visibility: hidden">*</span>
+<span class = "bullet" id = "bullet2" style="position:absolute; color: white; font-size: 30px; left:30px; top: 780px; visibility: hidden">*</span>
+<span class = "bullet" id = "bullet3" style="position:absolute; color: white; font-size: 30px; left:30px; top: 780px; visibility: hidden">*</span>
+<span class = "bullet" id = "bullet4" style="position:absolute; color: white; font-size: 30px; left:30px; top: 780px; visibility: hidden">*</span>
+<span class = "bullet" id = "bullet5" style="position:absolute; color: white; font-size: 30px; left:30px; top: 780px; visibility: hidden">*</span>
+
+</html>

@@ -1,0 +1,141 @@
+<html>
+<script>
+
+var lastCommand = ""; //call on this when we need to know what equate should do
+var lastInput = ""; //set this to currentInput when we press a command
+var currentInput = ""; //set to zero when we hit equals, set to answer when we hit a command twice, concat to it when we hit a number button
+var lastAnswer = ""; //set this when we hit equals or a double command, call on this when we hit answer button
+
+
+function input(button, clear)
+{
+    currentInput += document.getElementById(button).value;
+
+    if(clear == 1)
+    {
+        currentInput = "";
+        lastInput = "";
+        lastAnswer = "";
+        lastCommand = "";
+    }
+    document.getElementById("screen").value = currentInput;
+}
+
+function command(command)
+{
+    //set currentInput to lastAnswer if lastAnswer == ""
+    if(lastAnswer == "")
+    {
+       lastCommand = command;
+       lastAnswer = currentInput;
+       currentInput = "";
+       document.getElementById("screen").value = currentInput;
+       return;
+    }
+    else if(lastAnswer != "" && currentInput !="")
+    {
+        switch(command)
+        {
+            case "+":
+               switch(lastCommand)
+               {
+                    case "+": currentInput = parseInt(currentInput) + parseInt(lastAnswer); lastAnswer = currentInput; break; // run the last command on the last number and the current number
+                    case "-": currentInput = parseInt(currentInput) - parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "*": currentInput = parseInt(currentInput) * parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "/": currentInput = parseInt(lastAnswer) / parseInt(currentInput); lastAnswer = currentInput; break;
+               }
+               lastCommand = "+";
+               lastAnswer = currentInput;  // save the last answer
+               lastInput = currentInput;
+               currentInput = "";
+               document.getElementById("screen").value = lastInput; // show it on the screen
+               break;
+            case "-":
+               switch(lastCommand)
+               {
+                    case "+": currentInput = parseInt(currentInput) + parseInt(lastAnswer); lastAnswer = currentInput; break; // run the last command on the last number and the current number
+                    case "-": currentInput = parseInt(currentInput) - parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "*": currentInput = parseInt(currentInput) * parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "/": currentInput = parseInt(lastAnswer) / parseInt(currentInput); lastAnswer = currentInput; break;
+               }
+               lastCommand = "-";
+               lastAnswer = currentInput;  // save the last answer
+               lastInput = currentInput;
+               currentInput = "";
+               document.getElementById("screen").value = lastInput;
+               break;
+            case "/":
+               switch(lastCommand)
+               {
+                    case "+": currentInput = parseInt(currentInput) + parseInt(lastAnswer); lastAnswer = currentInput; break; // run the last command on the last number and the current number
+                    case "-": currentInput = parseInt(currentInput) - parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "*": currentInput = parseInt(currentInput) * parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "/": currentInput = parseInt(lastAnswer) / parseInt(currentInput); lastAnswer = currentInput; break;
+               }
+
+               lastCommand = "/";
+               lastAnswer = currentInput;  // save the last answer
+               lastInput = currentInput;
+               currentInput = "";
+               document.getElementById("screen").value = lastInput; // show it on the screen
+               break;
+            case "*":
+               switch(lastCommand)
+               {
+                    case "+": currentInput = parseInt(currentInput) + parseInt(lastAnswer); lastAnswer = currentInput; break; // run the last command on the last number and the current number
+                    case "-": currentInput = parseInt(currentInput) - parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "*": currentInput = parseInt(currentInput) * parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "/": currentInput = parseInt(lastAnswer) / parseInt(currentInput); lastAnswer = currentInput; break;
+               }
+               lastCommand = "*";
+               lastAnswer = currentInput;  // save the last answer
+               lastInput = currentInput;
+               currentInput = "";
+               document.getElementById("screen").value = lastInput; // show it on the screen
+               break;
+            case "=":
+               switch(lastCommand)
+               {
+                    case "+": currentInput = parseInt(currentInput) + parseInt(lastAnswer); lastAnswer = currentInput; break; // run the last command on the last number and the current number
+                    case "-": currentInput = parseInt(currentInput) - parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "*": currentInput = parseInt(currentInput) * parseInt(lastAnswer); lastAnswer = currentInput; break;
+                    case "/": currentInput = parseInt(lastAnswer) / parseInt(currentInput); lastAnswer = currentInput; break;
+               }
+               lastAnswer = currentInput;  // reset the last answer
+               currentInput = ""
+               lastCommand = ""; // reset the last command
+               document.getElementById("screen").value = lastAnswer; // show it on the screen
+               break;
+        }
+            
+    }
+}
+
+</script>
+
+<body background = "https://wp-assets.highcharts.com/blog/wp-content/uploads/2016/12/24135603/science_formula.jpg" style="margin:auto; border:8px solid white">
+</body>
+<div id="calculator" style= "margin-left:40%; margin-top:5%;width:430; height:560; background-color:grey; border:20px inset darkgrey; border-radius:10px">
+    <input id="screen" style="border:5px inset darkgreen; margin:20; width:380; height:100; background-color:limegreen; color:black;font-size: 50;" ><br>
+    <input type="button" id="one" value="1" style= "margin:20; width:60; height:60; border:1px solid darkgrey; border-radius: 20px; " onclick="input('one')">
+     <input type="button" id="two" value="2" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('two')">
+      <input type= "button" id="three" value="3" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('three')">
+       <input type= "button" id="multiply" value="x" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; "onclick="command('*')"><br>
+    
+    <input type="button" id="four"value = "4" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('four')">
+     <input type="button" id="five"value = "5" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('five')">
+      <input type= "button" id="six"value = "6" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('six')">
+       <input type= "button" id="subtract"value = "-" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; "onclick="command('-')"><br>
+       
+    <input type="button" id="seven"value = "7" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('seven')">
+     <input type="button" id="eight"value = "8" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('eight')">
+      <input type= "button" id="nine" value = "9" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('nine')">
+       <input type= "button" id="divide" value = "/" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; "onclick="command('/')"><br>
+
+       
+    <input type="button" name = "clear" id="clear" value = "CLR" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('clear', 1)">
+     <input type="button" id="zero" value = "0" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="input('zero')">
+      <input type= "button" id="equals" value = "=" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; " onclick="command('=')">
+       <input type= "button" id="plus" value = "+" style= "margin:20; width:60; height:60;border:1px solid darkgrey; border-radius: 20px; "onclick="command('+')">
+</div>
+<!grid
